@@ -1,9 +1,25 @@
 // BUDGET CONTROLLER
 var budgetController = (function() {
   
+  var Expense = function(id, description, value) { // function constructor for expenses
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  }
 
+  var Income = function(id, description, value) { // function constructor for incom
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  }
 
 })();
+
+var Expense = function(id, description, value) {
+  this.id = id;
+  this.description = description;
+  this.value = value;
+}
 
 // UI CONTROLLER
 var UIController = (function(){
@@ -52,7 +68,6 @@ var controller = (function(budgetCtrl, UICtrl) {      // controls the app
   var ctrlAddItem = function() {
 
     // 1. Get field input data
-
     var input = UICtrl.getInput();
 
     // 2. Add item to the budget controller
@@ -75,3 +90,5 @@ var controller = (function(budgetCtrl, UICtrl) {      // controls the app
 })(budgetController, UIController);
 
 controller.init();
+
+// create income and expense constructors for budget controller
