@@ -12,7 +12,7 @@ var UIController = (function(){
     inputType: '.add__type',                // so that you can change strings
     inputDescription: '.add__description',  // here and update the rest of the
     inputValue: '.add__value',              // UI Controller at once
-    inputBtn: '.add__button'
+    inputBtn: '.add__btn'
   }
 
   return {
@@ -29,22 +29,31 @@ var UIController = (function(){
       return DOMstrings;
     }
 
-
   };
 
 })();
 
 // GLOBAL APP CONTROLLER
 var controller = (function(budgetCtrl, UICtrl) {      // controls the app
+  
+  var setupEventListeners = function() {
+    var DOM = UICtrl.getDOMstrings();
 
-  var DOM = UICtrl.getDOMstrings();
+    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
+  
+    document.addEventListener('keypress', function(event) {
+      if (event.keycode === 13 || event.which === 13) {
+        ctrlAddItem();
+      }
+
+    });
+  }
 
   var ctrlAddItem = function() {
 
     // 1. Get field input data
 
     var input = UICtrl.getInput();
-    console.log(input);
 
     // 2. Add item to the budget controller
 
@@ -56,13 +65,13 @@ var controller = (function(budgetCtrl, UICtrl) {      // controls the app
 
   }
 
-  document.querySelector(DOM.inputButton).addEventListener('click', ctrlAddItem);
-  
-  document.addEventListener('keypress', function(event) {
-    if (event.keycode === 13 || event.which === 13) {
-      ctrlAddItem();
+  return {
+    init: function() {
+      console.log('Application has started.');
+      setupEventListeners();
     }
-
-  });
+  }
 
 })(budgetController, UIController);
+
+controller.init();
