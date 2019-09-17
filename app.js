@@ -13,6 +13,14 @@ var budgetController = (function() {
     this.value = value;
   }
 
+  var calculateTotal = function(type) {
+    var sum = 0;
+    data.allItems[type].forEach(function(cur) {
+      sum += cur.value;
+    });
+    data.totals[type] = sum;
+  } 
+
   var data = {
     allItems: {
       exp: [],
@@ -52,6 +60,17 @@ var budgetController = (function() {
       // return the new element
       return newItem;
     },
+
+    calculateBudget: function() {
+
+      // calculate total income and expenses
+
+      // calculate the budget: income - expenses
+
+      // calculate the percentage of income that we spent
+
+    },
+
     testing: function() { // Really useful method for development. Not meant for production
       console.log(data);
     }
@@ -90,6 +109,7 @@ var UIController = (function(){
         element = DOMstrings.incomeContainer;
 
         html = '<div class="item clearfix" id="income-%id%"> <div class="item__description">%description%</div> <div class="right clearfix"> <div class="item__value">%value%</div> <div class="item__delete"> <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button> </div> </div> </div>';
+
       } else if (type === 'exp') {
         element = DOMstrings.expensesContainer;
 
@@ -111,9 +131,10 @@ var UIController = (function(){
     clearFields: function() {
       var fields, fieldsArr;
 
-      fields = document.querySelectorAll(`${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`);
+      //this is a list
+      fields = document.querySelectorAll(`${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`); 
 
-      fieldsArr = Array.prototype.slice.call(fields); // turning the list into an array
+      fieldsArr = Array.prototype.slice.call(fields); // turns the list into an array
 
       fieldsArr.forEach(function(element) {
         element.value = '';
