@@ -29,7 +29,9 @@ var budgetController = (function() {
     totals: {
       exp: 0,
       inc: 0
-    }
+    },
+    budget: 0,
+    percentage: -1 // -1 is often used to denote that a value is non-existant
   }
 
   return {
@@ -64,10 +66,14 @@ var budgetController = (function() {
     calculateBudget: function() {
 
       // calculate total income and expenses
+      calculateTotal('exp');
+      calculateTotal('inc');
 
       // calculate the budget: income - expenses
+      data.budget = data.totals.inc - data.totals.exp;
 
       // calculate the percentage of income that we spent
+      data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
 
     },
 
@@ -171,6 +177,7 @@ var controller = (function(budgetCtrl, UICtrl) {      // controls the app
   var updateBudget = function() {
 
     // 1. Calculate budget
+    budgetCtrl.calculateBudget();
 
     // 2. Return the budget
 
