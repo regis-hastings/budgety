@@ -10,7 +10,7 @@ var budgetController = (function() {
 
   Expense.prototype.calcPercentage = function(totalIncome) {
     if (totalIncome > 0) {
-      this.percentage = Math.round((this.value / totalIncome) / totalIncome * 100); 
+      this.percentage = Math.round((this.value / totalIncome) * 100); 
     } else {
       this.percentage = -1;
     }
@@ -108,10 +108,28 @@ var budgetController = (function() {
       }
     },
 
-    calculatePercentages: function() {
+    calculatePercentages: function() { // calculates percentage each expense item is of total budget
 
-      
+      /*
+      a = 20
+      b = 10
+      c = 40
+      income = 100
+      a = 20/100 - 20%
+      b = 10/100 - 10%
+      c = 40/100 - 40%
+      */
 
+      data.allItems.exp.forEach(function(current){
+        current.calcPercentage(data.totals.inc);
+      })
+    },
+
+    getPercentages: function() {
+      var allPerc = data.allItems.exp.map(function(cur) {
+        return cur.getPercentage();
+      });
+      return allPerc;
     },
 
     getBudget: function() {
@@ -261,10 +279,13 @@ var controller = (function(budgetCtrl, UICtrl) {      // controls the app
 
   var updatePercentages = function() {
     // 1. Calculate percentages
+    budgetCtrl.calculatePercentages();
 
     // 2. Read percentages from the budget controller
+    var percentages = budgetCtrl.getPercentages();
 
     // 3. Update the UI with the new percentages
+    console.log(percentages);
   }
 
   var ctrlAddItem = function() {
@@ -296,7 +317,7 @@ var controller = (function(budgetCtrl, UICtrl) {      // controls the app
   var ctrlDeleteItem = function(event) {  // we get access to the event object if we use a parameter
     var itemID, splitID;
 
-    itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+    itemID = event.target.parentNode.parentNode.parentNode.parentNode.id; // Income and expense items are the only items with IDs
 
     if (itemID) {
 
