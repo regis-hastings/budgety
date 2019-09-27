@@ -166,6 +166,34 @@ var UIController = (function(){
     expensesPercLabel: '.item__percentage'
   }
 
+  var formatNumber = function(num, type) {
+    var numSplit;
+
+    /*
+    + or - before number
+    exactly 2 decimal places
+    comma separating the thousands
+
+    2310.4567 -> + 2,310.46
+    2000 -> 2,000.00
+    */
+
+    num = Math.abs(num); // abs stands for absolute and removes the sign from the number
+    num = num.toFixed(2);
+
+    numSplit = num.split('.');
+
+    int = numSplit[0];
+
+    if (int.length > 3) { // Does not work for budgets of 1,000,000+
+      int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3); // input 2310 then result would be 2,310
+    }
+
+    dec = numSplit[1];
+
+    return `${type === 'exp' ? '-' : '+'} ${int}.${dec}`;
+  };
+
   return {
 
     getInput: function() { // method for returning all 3 user inputs to UI
@@ -196,7 +224,7 @@ var UIController = (function(){
 
       newHTML = html.replace('%id%', obj.id);
       newHTML = newHTML.replace('%description%', obj.description);
-      newHTML = newHTML.replace('%value%', obj.value);
+      newHTML = newHTML.replace('%value%', formatNumber(obj.value, type));
 
       // Insert the HTML into the DOM
 
@@ -227,10 +255,16 @@ var UIController = (function(){
     },
 
     displayBudget: function(obj) {
+      var type;
+      if (obj.budget === 0) {
+        type = 'inc';
+      } else {
+        obj.budget > 0 ? type = 'inc' : type = 'exp';
+      }
 
-      document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-      document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
-      document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+      document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+      document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+      document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
 
       if (obj.percentage > 0) {
         document.querySelector(DOMstrings.percentageLabel).textContent = `${obj.percentage} %`;
